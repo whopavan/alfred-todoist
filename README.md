@@ -1,7 +1,7 @@
 # Alfred Todoist Workflow
 Create todoist tasks easily directly from your alfred. It's lite and you can create tasks by using natural language date time.
 
-![alfred-todoist](https://github.com/whopavan/alfred-todoist/blob/master/src/preview.png)
+![alfred-todoist](https://github.com/whopavan/alfred-todoist/blob/master/src/preview.png?raw=true)
 
 ## How to install
 To install you must be a alfred power user (to support workflows).
