@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>bundleid</key>
+	<string>alfred-todoist</string>
+	<key>category</key>
+	<string>Productivity</string>
+	<key>connections</key>
+	<dict>
+		<key>3D14E2C7-B92D-43D4-B756-FB555F725248</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>47D563DF-A00A-4111-8720-05A34D39EF16</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+	</dict>
+	<key>createdby</key>
+	<string>Pavan Kumar</string>
+	<key>description</key>
+	<string>Alfred workflow for todoist. Create tasks from alfred.</string>
+	<key>disabled</key>
+	<false/>
+	<key>name</key>
+	<string>Alfred todoist</string>
+	<key>objects</key>
+	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>0</integer>
+				<key>script</key>
+				<string>#!/bin/zsh
+
+myString=$(echo {query})
+
+finalContent=$myString
+every=$(echo $myString | grep -oE '\b(?:on|next|every|this)?\b[[:blank:]]?(?:monday|tuesday|wednesday|thursday|friday|saturday|sunday|weekend|weekends|week|month|year)' | xargs)
+if [[ $every != '' ]]; then
+    finalContent=${finalContent//$every}
+fi
+
+myDate=$(echo $myString | grep -oE '\b(?:today[[:blank:]]?|tomorrow[[:blank:]]?|at[[:blank:]]?)?\b[0-9]?[0-9]?(?:am|pm)?' | xargs)
+if [[ $myDate != '' ]]; then
+    finalContent=${finalContent//$myDate}
+fi
+
+finalContent=$(echo $finalContent | xargs) 
+finalDueString='today'
+if [[ $every != '' || $myDate != '' ]]; then
+    if [[ -z "$every" ]]; then
+        finalDueString=$myDate
+    else
+        finalDueString=$(echo $every $myDate | xargs)
+    fi
+    
+    data=$(echo '{"content": '\"${finalContent}\"', "due_string": '\"${finalDueString}\"', "due_lang": "en"}')
+
+	curl -v "https://api.todoist.com/rest/v2/tasks" \
+    --data ${data} \
+    -H "Content-Type: application/json" \
+    -H "X-Request-Id: $(uuidgen)" \
+    -H "Authorization: Bearer ${token}" \
+    -H "Connection: close"
+else
+    data=$(echo '{"content": '\"${finalContent}\"', "due_string": '\"${finalDueString}\"', "due_lang": "en"}')
+
+    curl -v "https://api.todoist.com/rest/v2/tasks" \
+    --data ${data} \
+    -H "Content-Type: application/json" \
+    -H  "X-Request-Id: $(uuidgen)" \
+    -H "Authorization: Bearer ${token}" \
+    -H "Connection: close"
+fi</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>5</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>47D563DF-A00A-4111-8720-05A34D39EF16</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>keyword</key>
+				<string>todo</string>
+				<key>subtext</key>
+				<string>todo Call Pavan tomorrow at 10 am</string>
+				<key>text</key>
+				<string>Add tasks to todoist</string>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>3D14E2C7-B92D-43D4-B756-FB555F725248</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+	</array>
+	<key>readme</key>
+	<string>Create todoist tasks easily directly from your alfred. Supports natural language date time.
+
+Get todoist token from here: https://todoist.com/app/settings/integrations
+
+![](preview.png)</string>
+	<key>uidata</key>
+	<dict>
+		<key>3D14E2C7-B92D-43D4-B756-FB555F725248</key>
+		<dict>
+			<key>xpos</key>
+			<real>60</real>
+			<key>ypos</key>
+			<real>165</real>
+		</dict>
+		<key>47D563DF-A00A-4111-8720-05A34D39EF16</key>
+		<dict>
+			<key>xpos</key>
+			<real>355</real>
+			<key>ypos</key>
+			<real>160</real>
+		</dict>
+	</dict>
+	<key>userconfigurationconfig</key>
+	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string></string>
+				<key>placeholder</key>
+				<string>token</string>
+				<key>required</key>
+				<true/>
+				<key>trim</key>
+				<true/>
+			</dict>
+			<key>description</key>
+			<string>Get it from https://todoist.com/app/settings/integrations</string>
+			<key>label</key>
+			<string>Todoist Token</string>
+			<key>type</key>
+			<string>textfield</string>
+			<key>variable</key>
+			<string>token</string>
+		</dict>
+	</array>
+	<key>version</key>
+	<string>1.0</string>
+	<key>webaddress</key>
+	<string>https://github.com/whopavan/alfred-todoist</string>
+</dict>
+</plist>
