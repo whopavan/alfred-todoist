@@ -119,11 +119,11 @@ fi</string>
 		</dict>
 	</array>
 	<key>readme</key>
-	<string>Create todoist tasks easily directly from your alfred. Supports natural language date time.
+	<string>Create todoist tasks easily directly from your alfred. It's lite and supports natural language date time.
 
 Get todoist token from here: https://todoist.com/app/settings/integrations
 
-![](preview.png)</string>
+![preview](preview.png)</string>
 	<key>uidata</key>
 	<dict>
 		<key>3D14E2C7-B92D-43D4-B756-FB555F725248</key>
